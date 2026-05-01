@@ -463,10 +463,11 @@ function rectsOverlap(a, b) {
 
 function tankCollidesMap(tank, nx, ny) {
   const g = game;
-  const cols = Math.floor(nx / TILE);
-  const cols2 = Math.floor((nx + TANK_SIZE - 1) / TILE);
-  const rows = Math.floor(ny / TILE);
-  const rows2 = Math.floor((ny + TANK_SIZE - 1) / TILE);
+  const margin = 1;
+  const cols = Math.floor((nx + margin) / TILE);
+  const cols2 = Math.floor((nx + TANK_SIZE - 1 - margin) / TILE);
+  const rows = Math.floor((ny + margin) / TILE);
+  const rows2 = Math.floor((ny + TANK_SIZE - 1 - margin) / TILE);
   for (let r = rows; r <= rows2; r++) {
     for (let c = cols; c <= cols2; c++) {
       if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return true;
@@ -544,8 +545,8 @@ function updateEnemyAI(enemy, dt) {
   }
 
   // Move in current direction
-  const nx = enemy.x + DX[enemy.dir] * spd;
-  const ny = enemy.y + DY[enemy.dir] * spd;
+  const nx = Math.round(enemy.x + DX[enemy.dir] * spd);
+  const ny = Math.round(enemy.y + DY[enemy.dir] * spd);
   if (canMoveTo(enemy, nx, ny)) {
     enemy.x = nx;
     enemy.y = ny;
@@ -711,16 +712,16 @@ function update(dt) {
     const spd = p.speed * dt;
 
     if (g.keys.has('w') || g.keys.has('arrowup')) {
-      if (canMoveTo(p, p.x, p.y - spd)) { p.y -= spd; p.dir = DIR.UP; moving = true; }
+      if (canMoveTo(p, p.x, p.y - spd)) { p.y = Math.round(p.y - spd); p.dir = DIR.UP; moving = true; }
       else { p.dir = DIR.UP; }
     } else if (g.keys.has('s') || g.keys.has('arrowdown')) {
-      if (canMoveTo(p, p.x, p.y + spd)) { p.y += spd; p.dir = DIR.DOWN; moving = true; }
+      if (canMoveTo(p, p.x, p.y + spd)) { p.y = Math.round(p.y + spd); p.dir = DIR.DOWN; moving = true; }
       else { p.dir = DIR.DOWN; }
     } else if (g.keys.has('a') || g.keys.has('arrowleft')) {
-      if (canMoveTo(p, p.x - spd, p.y)) { p.x -= spd; p.dir = DIR.LEFT; moving = true; }
+      if (canMoveTo(p, p.x - spd, p.y)) { p.x = Math.round(p.x - spd); p.dir = DIR.LEFT; moving = true; }
       else { p.dir = DIR.LEFT; }
     } else if (g.keys.has('d') || g.keys.has('arrowright')) {
-      if (canMoveTo(p, p.x + spd, p.y)) { p.x += spd; p.dir = DIR.RIGHT; moving = true; }
+      if (canMoveTo(p, p.x + spd, p.y)) { p.x = Math.round(p.x + spd); p.dir = DIR.RIGHT; moving = true; }
       else { p.dir = DIR.RIGHT; }
     }
 
@@ -1198,7 +1199,7 @@ function render() {
 function updateUI() {
   const g = game;
   scoreEl.textContent = g.score;
-  levelEl.textContent = g.level + 1;
+  levelEl.textContent = (g.level + 1) + ' / ' + LEVELS.length;
   livesEl.textContent = g.lives;
 
   const remaining = g.enemiesTotal - g.enemiesSpawned + g.enemiesAlive;
@@ -1264,9 +1265,7 @@ function gameLoop(timestamp) {
   // Clamp dt to prevent spiral of death
   if (dt > 0.05) dt = 0.05;
 
-  if (g.state === 'PLAYING') {
-    update(dt);
-  }
+  update(dt);
 
   render();
   requestAnimationFrame(gameLoop);

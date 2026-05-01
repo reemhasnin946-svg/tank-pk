@@ -9,7 +9,10 @@
       "Bash(gh --version)",
       "Bash(timeout 5 gh auth login)",
       "Bash(gh auth *)",
-      "Bash(gh repo *)"
+      "Bash(gh repo *)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'Fix level transition, collision, and display issues *)",
+      "Bash(git push *)"
     ]
   }
 }
