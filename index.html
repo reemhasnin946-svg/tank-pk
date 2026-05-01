@@ -597,7 +597,7 @@ function updateEnemyAI(enemy, dt) {
 // ========== SPAWNING ==========
 function spawnPlayer() {
   const g = game;
-  const x = 9 * TILE;
+  const x = 8 * TILE;
   const y = 24 * TILE;
   g.player = createTank(x, y, DIR.UP, true);
   g.player.shieldTimer = 3;
@@ -930,6 +930,7 @@ function drawTank(tank) {
 
 function drawMap() {
   const g = game;
+  if (!g.map || g.map.length === 0 || !g.map[0]) return;
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
       const t = g.map[r][c];
@@ -1377,6 +1378,7 @@ document.addEventListener('keyup', (e) => {
 initAudio();
 game = createGameState();
 game.state = 'MENU';
+loadLevel(0);
 updateUI();
 requestAnimationFrame(gameLoop);
 

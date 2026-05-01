@@ -6,7 +6,10 @@
       "Bash(node *)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" https://api.github.com)",
       "Bash(export PATH=\"$PATH:/c/Program Files/GitHub CLI\")",
-      "Bash(gh --version)"
+      "Bash(gh --version)",
+      "Bash(timeout 5 gh auth login)",
+      "Bash(gh auth *)",
+      "Bash(gh repo *)"
     ]
   }
 }
